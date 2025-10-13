@@ -1,0 +1,174 @@
+version: '3.8'
+
+services:
+  # MongoDB数据库
+  mongodb:
+    image: mongo:6.0
+    container_name: cs-learning-mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password123
+      MONGO_INITDB_DATABASE: cs_learning
+    volumes:
+      - mongodb_data:/data/db
+      - ./database/init:/docker-entrypoint-initdb.d
+    networks:
+      - cs-learning-network
+
+  # Redis缓存
+  redis:
+    image: redis:7.0-alpine
+    container_name: cs-learning-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes --requirepass redis123
+    volumes:
+      - redis_data:/data
+    networks:
+      - cs-learning-network
+
+  # MinIO对象存储
+  minio:
+    image: minio/minio:latest
+    container_name: cs-learning-minio
+    restart: always
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin123
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data:/data
+    networks:
+      - cs-learning-network
+
+  # PostgreSQL数据库
+  postgres:
+    image: postgres:15
+    container_name: cs-learning-postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: cs_learning
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres123
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init:/docker-entrypoint-initdb.d
+    networks:
+      - cs-learning-network
+
+  # Go后端API服务
+  backend-go:
+    build:
+      context: ./backend-go
+      dockerfile: Dockerfile
+    container_name: cs-learning-backend-go
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      ENV: development
+      DATABASE_URL: postgres://postgres:postgres123@postgres:5432/cs_learning?sslmode=disable
+      REDIS_URL: redis://:redis123@redis:6379
+      JWT_SECRET: your-super-secret-jwt-key
+      AI_SERVICE_URL: http://ai-service:8000
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+    depends_on:
+      - postgres
+      - redis
+      - minio
+    networks:
+      - cs-learning-network
+    volumes:
+      - ./backend-go:/app
+
+  # Node.js后端服务 (备选)
+  backend-node:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: cs-learning-backend-node
+    restart: always
+    ports:
+      - "5001:5000"
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: postgres://postgres:postgres123@postgres:5432/cs_learning?sslmode=disable
+      REDIS_URL: redis://:redis123@redis:6379
+      JWT_SECRET: your-super-secret-jwt-key
+      MINIO_ENDPOINT: minio
+      MINIO_PORT: 9000
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin123
+    depends_on:
+      - postgres
+      - redis
+      - minio
+    networks:
+      - cs-learning-network
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    profiles:
+      - node-backend
+
+  # AI服务
+  ai-service:
+    build:
+      context: ./ai-service
+      dockerfile: Dockerfile
+    container_name: cs-learning-ai
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      DATABASE_URL: postgres://postgres:postgres123@postgres:5432/cs_learning?sslmode=disable
+      REDIS_URL: redis://:redis123@redis:6379
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - cs-learning-network
+    volumes:
+      - ./ai-service:/app
+      - ai_models:/app/models
+
+  # 前端应用
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: cs-learning-frontend
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      REACT_APP_API_URL: http://localhost:5000
+      REACT_APP_AI_API_URL: http://localhost:8000
+    depends_on:
+      - backend-go
+      - ai-service
+    networks:
+      - cs-learning-network
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+
+volumes:
+  postgres_data:
+  redis_data:
+  minio_data:
+  ai_models:
+
+networks:
+  cs-learning-network:
+    driver: bridge
