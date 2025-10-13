@@ -17,7 +17,7 @@
 3. 填写仓库信息：
 
 ```
-Repository name: cs-learning-assistant
+Repository name: BUPTcs
 Description: 🎓 大学生计算机技能自学软件 - 基于LLM的智能学习平台
 Visibility: ✅ Public（推荐开源）
 Initialize: ❌ 不要勾选任何选项（我们已经有完整项目）
@@ -31,7 +31,7 @@ Initialize: ❌ 不要勾选任何选项（我们已经有完整项目）
 
 ```powershell
 # 1. 添加远程仓库
-git remote add origin https://github.com/YOUR_USERNAME/cs-learning-assistant.git
+git remote add origin https://github.com/liusuan110/BUPTcs.git
 
 # 2. 验证远程仓库
 git remote -v
@@ -58,7 +58,7 @@ choco install gh
 
 # 安装后登录并创建仓库
 gh auth login
-gh repo create cs-learning-assistant --public --source=. --remote=origin --push
+gh repo create BUPTcs --public --source=. --remote=origin --push
 ```
 
 ## 📊 仓库配置建议
@@ -161,11 +161,11 @@ jobs:
 在README.md顶部添加：
 
 ```markdown
-![GitHub stars](https://img.shields.io/github/stars/YOUR_USERNAME/cs-learning-assistant)
-![GitHub forks](https://img.shields.io/github/forks/YOUR_USERNAME/cs-learning-assistant)
-![GitHub issues](https://img.shields.io/github/issues/YOUR_USERNAME/cs-learning-assistant)
-![GitHub license](https://img.shields.io/github/license/YOUR_USERNAME/cs-learning-assistant)
-![GitHub workflow status](https://img.shields.io/github/workflow/status/YOUR_USERNAME/cs-learning-assistant/CI)
+![GitHub stars](https://img.shields.io/github/stars/liusuan110/BUPTcs)
+![GitHub forks](https://img.shields.io/github/forks/liusuan110/BUPTcs)
+![GitHub issues](https://img.shields.io/github/issues/liusuan110/BUPTcs)
+![GitHub license](https://img.shields.io/github/license/liusuan110/BUPTcs)
+![GitHub workflow status](https://img.shields.io/github/workflow/status/liusuan110/BUPTcs/CI)
 ```
 
 ### 社区分享
@@ -223,7 +223,7 @@ updates:
 
 恭喜！您的CS自学助手项目现在已经在GitHub上了！
 
-**仓库地址**: `https://github.com/YOUR_USERNAME/cs-learning-assistant`
+**仓库地址**: `https://github.com/liusuan110/BUPTcs`
 
 接下来可以：
 1. 邀请协作者参与开发
