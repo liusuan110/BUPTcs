@@ -1,0 +1,142 @@
+# Spring Boot 应用配置
+spring:
+  application:
+    name: cs-learning-assistant
+  
+  # 数据库配置
+  datasource:
+    url: jdbc:postgresql://localhost:5432/cs_learning_db
+    username: ${DB_USERNAME:cs_user}
+    password: ${DB_PASSWORD:cs_password}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+      idle-timeout: 300000
+      connection-timeout: 20000
+      max-lifetime: 1200000
+  
+  # JPA配置
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        generate_statistics: false
+        jdbc:
+          batch_size: 25
+          order_inserts: true
+          order_updates: true
+    open-in-view: false
+  
+  # Redis配置
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password: ${REDIS_PASSWORD:}
+      database: 0
+      timeout: 2000ms
+      lettuce:
+        pool:
+          max-active: 20
+          max-idle: 8
+          min-idle: 2
+          max-wait: 2000ms
+  
+  # JSON配置
+  jackson:
+    time-zone: Asia/Shanghai
+    date-format: yyyy-MM-dd HH:mm:ss
+    property-naming-strategy: SNAKE_CASE
+    default-property-inclusion: NON_NULL
+  
+  # 文件上传配置
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 20MB
+
+# 服务器配置
+server:
+  port: ${SERVER_PORT:8080}
+  servlet:
+    context-path: /api/v1
+  compression:
+    enabled: true
+    mime-types: text/html,text/xml,text/plain,text/css,application/json,application/javascript
+  http2:
+    enabled: true
+
+# 日志配置
+logging:
+  level:
+    com.buptcs: INFO
+    org.springframework.security: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/cs-learning-assistant.log
+    max-size: 10MB
+    max-history: 30
+
+# JWT配置
+jwt:
+  secret: ${JWT_SECRET:buptcs-learning-assistant-secret-key-2024-very-long-secret}
+  expiration: 86400000 # 24小时(毫秒)
+  refresh-expiration: 604800000 # 7天(毫秒)
+
+# 应用自定义配置
+app:
+  cors:
+    allowed-origins: ${CORS_ORIGINS:http://localhost:3000,http://127.0.0.1:3000}
+    allowed-methods: GET,POST,PUT,DELETE,OPTIONS
+    allowed-headers: "*"
+    allow-credentials: true
+  
+  # AI服务配置
+  ai-service:
+    base-url: ${AI_SERVICE_URL:http://localhost:8000}
+    timeout: 30s
+    
+  # 文件存储配置
+  file-storage:
+    upload-dir: ${UPLOAD_DIR:./uploads}
+    max-file-size: 10MB
+    allowed-types: jpg,jpeg,png,gif,pdf,doc,docx,txt
+
+# 监控配置
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: when-authorized
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
+# OpenAPI文档配置
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: method
+    tagsSorter: alpha
+  info:
+    title: CS Learning Assistant API
+    description: 大学生计算机技能自学助手API文档
+    version: 1.0.0
+    contact:
+      name: BUPTcs Team
+      email: team@buptcs.com

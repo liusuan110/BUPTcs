@@ -67,6 +67,18 @@ target/
 .classpath
 .project
 .settings/
+.metadata/
+.gradle/
+gradle/
+gradlew
+gradlew.bat
+*.iml
+*.ipr
+*.iws
+.mvn/wrapper/maven-wrapper.jar
+.mvn/wrapper/maven-wrapper.properties
+mvnw
+mvnw.cmd
 
 # IDE相关
 .vscode/

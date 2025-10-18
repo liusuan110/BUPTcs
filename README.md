@@ -31,11 +31,12 @@
 - **路由**: React Router v6
 
 ### 后端 (Backend)
-- **运行时**: Node.js
-- **框架**: Express.js + TypeScript
-- **数据库**: MongoDB + Mongoose
-- **认证**: JWT + Passport.js
-- **API文档**: Swagger/OpenAPI
+- **语言**: Java 17
+- **框架**: Spring Boot 3.1
+- **数据库**: PostgreSQL + Spring Data JPA
+- **缓存**: Redis + Spring Data Redis
+- **认证**: JWT + Spring Security
+- **API文档**: SpringDoc OpenAPI 3
 
 ### AI服务 (AI Service)
 - **语言**: Python 3.11+
@@ -45,7 +46,7 @@
 - **向量数据库**: Chroma/Pinecone
 
 ### 数据库设计
-- **主数据库**: MongoDB (用户数据、课程内容)
+- **主数据库**: PostgreSQL (用户数据、课程内容)
 - **缓存**: Redis (会话、缓存)
 - **文件存储**: MinIO/AWS S3 (资源文件)
 
@@ -63,15 +64,20 @@ cs-learning-assistant/
 │   │   └── utils/          # 工具函数
 │   ├── public/             # 静态资源
 │   └── package.json
-├── backend/                  # Node.js后端API
-│   ├── src/
-│   │   ├── controllers/    # 控制器
-│   │   ├── models/         # 数据模型
-│   │   ├── routes/         # 路由定义
-│   │   ├── middleware/     # 中间件
-│   │   ├── services/       # 业务逻辑
-│   │   └── utils/          # 工具函数
-│   └── package.json
+├── backend-java/             # Java Spring Boot后端
+│   ├── src/main/java/
+│   │   └── com/buptcs/
+│   │       ├── controller/ # 控制器
+│   │       ├── service/    # 服务层
+│   │       ├── repository/ # 数据访问层
+│   │       ├── entity/     # JPA实体
+│   │       ├── dto/        # 数据传输对象
+│   │       ├── config/     # 配置类
+│   │       ├── security/   # 安全配置
+│   │       └── exception/  # 异常处理
+│   ├── src/main/resources/ # 配置文件
+│   ├── pom.xml            # Maven配置
+│   └── Dockerfile         # Docker配置
 ├── ai-service/              # Python AI服务
 │   ├── app/
 │   │   ├── models/         # AI模型
@@ -97,8 +103,9 @@ cs-learning-assistant/
 
 ### 环境要求
 - Node.js 18+
+- Java 17+
 - Python 3.11+
-- MongoDB 6.0+
+- PostgreSQL 15+
 - Redis 7.0+
 
 ### 安装依赖
@@ -108,9 +115,9 @@ cs-learning-assistant/
 cd frontend
 npm install
 
-# 后端依赖
-cd ../backend
-npm install
+# Java后端依赖
+cd ../backend-java
+./mvnw install
 
 # AI服务依赖
 cd ../ai-service
@@ -121,11 +128,11 @@ pip install -r requirements.txt
 
 ```bash
 # 启动数据库服务
-docker-compose up -d mongodb redis
+docker-compose up -d postgresql redis
 
-# 启动后端服务
-cd backend
-npm run dev
+# 启动Java后端服务
+cd backend-java
+./mvnw spring-boot:run
 
 # 启动AI服务
 cd ../ai-service
