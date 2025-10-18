@@ -2,8 +2,8 @@
 
 param(
     [Parameter(Mandatory=$false)]
-    [ValidateSet("go", "node", "java")]
-    [string]$Backend = "go",
+    [ValidateSet("node", "java")]
+    [string]$Backend = "java",
     
     [Parameter(Mandatory=$false)]
     [switch]$Dev = $false,
@@ -30,13 +30,6 @@ if ($Docker -and !(Test-Command docker)) {
 
 # 根据选择的技术栈检查环境
 switch ($Backend) {
-    "go" {
-        if (!(Test-Command go)) {
-            Write-Host "错误: 未找到Go，请先安装Go 1.21+" -ForegroundColor Red
-            exit 1
-        }
-        Write-Host "✅ Go环境检查通过" -ForegroundColor Green
-    }
     "node" {
         if (!(Test-Command node)) {
             Write-Host "错误: 未找到Node.js，请先安装Node.js 18+" -ForegroundColor Red
@@ -88,20 +81,6 @@ if ($Docker) {
     
     # 根据选择的后端技术栈进行不同的处理
     switch ($Backend) {
-        "go" {
-            Write-Host "初始化Go项目..." -ForegroundColor Blue
-            Set-Location backend-go
-            
-            if (!(Test-Path go.sum)) {
-                Write-Host "下载Go依赖..." -ForegroundColor Blue
-                go mod tidy
-                go mod download
-            }
-            
-            Write-Host "启动Go后端服务..." -ForegroundColor Green
-            Write-Host "命令: cd backend-go && go run cmd/server/main.go" -ForegroundColor White
-            Set-Location ..
-        }
         "node" {
             Write-Host "初始化Node.js项目..." -ForegroundColor Blue
             Set-Location backend
@@ -170,12 +149,10 @@ Write-Host ""
 
 if (!$Docker) {
     Write-Host "🚀 手动启动开发服务器:" -ForegroundColor Cyan
-    Write-Host "   1. 后端服务: cd backend-$Backend && " -NoNewline -ForegroundColor White
-    
-    switch ($Backend) {
-        "go" { Write-Host "go run cmd/server/main.go" -ForegroundColor White }
-        "node" { Write-Host "npm run dev" -ForegroundColor White }
-        "java" { Write-Host "mvn spring-boot:run" -ForegroundColor White }
+    if ($Backend -eq "node") {
+        Write-Host "   1. 后端服务: cd backend && npm run dev" -ForegroundColor White
+    } elseif ($Backend -eq "java") {
+        Write-Host "   1. 后端服务: cd backend-java && mvn spring-boot:run" -ForegroundColor White
     }
     
     Write-Host "   2. AI服务: cd ai-service && python main.py" -ForegroundColor White

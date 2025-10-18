@@ -116,16 +116,14 @@ jobs:
     - run: cd frontend && npm run build
     - run: cd frontend && npm test
 
-  backend-go:
+  # backend-go: （已移除）
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-go@v3
       with:
         go-version: '1.21'
-    - run: cd backend-go && go mod download
-    - run: cd backend-go && go test ./...
-    - run: cd backend-go && go build ./cmd/server
+  # 已移除 backend-go 相关步骤
 
   ai-service:
     runs-on: ubuntu-latest
@@ -197,7 +195,7 @@ updates:
       interval: "weekly"
   
   - package-ecosystem: "gomod"  
-    directory: "/backend-go"
+  # directory: "/backend-go" （已移除）
     schedule:
       interval: "weekly"
       

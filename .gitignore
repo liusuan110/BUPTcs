@@ -9,12 +9,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Go相关
-backend-go/vendor/
-backend-go/*.log
-backend-go/bin/
-backend-go/pkg/
-backend-go/src/
+# Go相关（已移除 backend-go 目录，如需新增 Go 项目请根据实际路径添加忽略项）
 *.exe
 *.exe~
 *.dll

@@ -23,7 +23,8 @@ git clone https://github.com/your-username/cs-learning-assistant.git
 cd cs-learning-assistant
 
 # 安装依赖并启动服务
-./start-stack.ps1 -Backend go
+<!-- 原 `backend-go/` Go后端服务目录已移除 -->
+./start-stack.ps1 -Backend java
 ```
 
 ### 代码规范
@@ -54,11 +55,7 @@ docs(readme): update installation instructions
 ## 开发指南
 
 ### 项目结构
-- `frontend/` - React前端应用
-- `backend-go/` - Go后端服务
-- `backend/` - Node.js后端服务（备选）
-- `ai-service/` - Python AI服务
-- `docs/` - 项目文档
+ `backend-java/` - Java后端服务
 
 ### 技术栈
 - 前端: React + TypeScript + Ant Design
@@ -71,8 +68,9 @@ docs(readme): update installation instructions
 # 前端测试
 cd frontend && npm test
 
-# Go后端测试
-cd backend-go && go test ./...
+# 后端与服务测试
+# Java 后端
+cd backend-java && mvnw test
 
 # Python测试
 cd ai-service && python -m pytest

@@ -8,7 +8,7 @@ try {
     $javaVersion = java -version 2>&1 | Select-String "version"
     Write-Host "✅ Java版本: $javaVersion" -ForegroundColor Green
 } catch {
-    Write-Host "❌ 未检测到Java环境，请安装Java 17或更高版本" -ForegroundColor Red
+    Write-Host "❌ 未检测到Java环境，请安装Java 21或更高版本" -ForegroundColor Red
     exit 1
 }
 

@@ -1,5 +1,5 @@
 # Java后端Dockerfile
-FROM eclipse-temurin:17-jdk-alpine AS build
+FROM eclipse-temurin:21-jdk-alpine AS build
 
 # 设置工作目录
 WORKDIR /app
@@ -19,7 +19,7 @@ COPY src src
 RUN ./mvnw package -DskipTests
 
 # 运行时镜像
-FROM eclipse-temurin:17-jre-alpine
+FROM eclipse-temurin:21-jre-alpine
 
 # 安装必要工具
 RUN apk add --no-cache curl
@@ -49,7 +49,8 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
 EXPOSE 8080
 
 # 设置JVM参数
-ENV JAVA_OPTS="-Xmx512m -Xms256m -XX:+UseG1GC -XX:+UseContainerSupport"
+# JDK 21 默认支持容器内存限制，无需显式 UseContainerSupport
+ENV JAVA_OPTS="-Xmx512m -Xms256m -XX:+UseG1GC"
 
 # 启动应用
 ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
